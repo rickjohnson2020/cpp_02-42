@@ -1,0 +1,56 @@
+#include "./Fixed.hpp"
+#include <ostream>
+
+Fixed::Fixed() : _raw(0) {
+	std::cout << "Default constructor called" << std::endl;
+};
+
+Fixed::Fixed(const int n) {
+	std::cout << "Int constructor called" << std::endl;
+	this->_raw = n << Fixed::fractionalBits;
+}
+
+Fixed::Fixed(const float f) {
+	std::cout << "Float constructor called" << std::endl;
+	this->_raw = static_cast<int>(roundf(f * (1 << Fixed::fractionalBits)));
+}
+
+Fixed::~Fixed() {
+	std::cout << "Destructor called" << std::endl;
+};
+
+Fixed::Fixed(const Fixed& obj) {
+	std::cout << "Copy constructor called" << std::endl;
+	this->_raw = obj._raw;
+};
+
+Fixed& Fixed::operator=(const Fixed& obj) {
+	std::cout << "Copy assignment operator called" << std::endl;
+	if (this == &obj)
+		return *this;
+	this->_raw = obj._raw;
+	return *this;
+}
+
+int Fixed::getRawBits() const {
+	std::cout << "getRawBits member function called" << std::endl;
+	return this->_raw;
+}
+
+void Fixed::setRawBits(int const raw) {
+	std::cout << "setRawBits member function called" << std::endl;
+	this->_raw = raw;
+}
+
+float Fixed::toFloat() const {
+	return static_cast<float>(this->_raw) / (1 << Fixed::fractionalBits);
+}
+
+int Fixed::toInt() const {
+	return this->_raw >> Fixed::fractionalBits;
+}
+
+std::ostream& operator<<(std::ostream& os, const Fixed& obj) {
+	os << obj.toFloat();
+	return os;
+}
